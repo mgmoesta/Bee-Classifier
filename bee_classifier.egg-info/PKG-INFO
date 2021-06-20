@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: bee-classifier
+Version: 0.0.1
+Summary: python package that trains an image classifier to predict if a bee in carrying pollen
+Home-page: UNKNOWN
+Author: MGM
+Author-email: mgmoesta@gmail.com
+License: UNKNOWN
+Description: 
+        # Bee-Classifier
+Platform: UNKNOWN
+Requires-Python: >=3.7.0
+Description-Content-Type: text/markdown

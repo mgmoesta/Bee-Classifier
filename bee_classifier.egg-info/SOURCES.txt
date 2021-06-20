@@ -1,0 +1,6 @@
+README.md
+setup.py
+bee_classifier.egg-info/PKG-INFO
+bee_classifier.egg-info/SOURCES.txt
+bee_classifier.egg-info/dependency_links.txt
+bee_classifier.egg-info/top_level.txt
