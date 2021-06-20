@@ -24,8 +24,14 @@ class ImageClassifier:
         self.batchnorm_flag = batchnorm_flag
         self.epochs = epochs
 
-    def _obj_function(self,
-                      params):
+    def obj_function(self,
+                     params):
+        """
+
+        :param params:
+        :return:
+
+        """
         if self.batchnorm_flag == True:
             model_arch = self._get_batchnorm_arch()
         else:
@@ -51,13 +57,22 @@ class ImageClassifier:
         return {"loss": obj_metric, "status": STATUS_OK}
 
     def train_model_hyperopt(self,
-                             objective_funtion,
+                             objective_function,
                              space: dict,
                              max_evals: int,
                              seed=int
                              ):
+        """
 
-        best_hyperparams = fmin(fn=objective_funtion,
+        :param objective_function: given objective function to minimzie
+        :param space: search space
+        :param max_evals: max number of evaluations
+        :param seed: random state
+        :return:
+            best_hyperparameters
+        """
+
+        best_hyperparams = fmin(fn=objective_function,
                                 space=space,
                                 algo=tpe.suggest,
                                 max_evals=max_evals,
@@ -70,6 +85,12 @@ class ImageClassifier:
                     optimizer,
                     learning_rate: float
                     ):
+        """
+
+        :param optimizer: the tf.keras.optimizer used when compiling model
+        :param learning_rate: LR optimizer will use to find minima
+        :return: history, model_architecture
+        """
 
         # Get model arch
         if self.batchnorm_flag == True:
@@ -92,25 +113,17 @@ class ImageClassifier:
         history = model_arch.fit(self.X_train, self.y_train, validation_split=.2, epochs=self.epochs, verbose=2,
                                  callbacks=callbacks)
 
-        # View model loss
-        plot = view_model_loss(history)
-
         return history, model_arch
 
     @staticmethod
-    def view_model_loss(history):
-        plt.clf()
-        plt.plot(history.history["loss"])
-        plt.title("Model Loss")
-        plt.ylabel("Loss")
-        plt.xlabel("Epoch")
-        plt.show()
-
-    @staticmethod
     def _get_batchnorm_arch():
+        """
+
+        :return: model architecture using batch normalization
+        """
         model = models.Sequential()
         model.add(layers.Conv2D(64, (3, 3), activation='relu', input_shape=(
-        300, 180, 3)))  # input shape must be the match the input image tensor shape
+            300, 180, 3)))  # input shape must be the match the input image tensor shape
         model.add(layers.MaxPooling2D(2, 2))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPooling2D(2, 2))
@@ -131,9 +144,13 @@ class ImageClassifier:
 
     @staticmethod
     def _get_arch():
+        """
+
+        :return: model architecture using dropout
+        """
         model = models.Sequential()
         model.add(layers.Conv2D(64, (3, 3), activation='relu', input_shape=(
-        300, 180, 3)))  # input shape must be the match the input image tensor shape
+            300, 180, 3)))  # input shape must be the match the input image tensor shape
         model.add(layers.MaxPooling2D(2, 2))
         model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         model.add(layers.MaxPooling2D(2, 2))
@@ -153,6 +170,10 @@ class ImageClassifier:
 
     @staticmethod
     def _get_callbacks():
+        """
+
+        :return: callbacks, list of configured callbacks to be used for model training
+        """
 
         # Early stopping
         early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_acc', patience=3)
